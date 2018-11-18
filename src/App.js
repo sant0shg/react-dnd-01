@@ -1,28 +1,39 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Source from './Source';
+import Target from './Target';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import _ from 'lodash';
 import './App.css';
 
 class App extends Component {
+  constructor(){
+    super();
+    this.state = {
+      components: []
+    }
+    this.onDrop = this.onDrop.bind(this);
+  }
+  
+  onDrop(component){
+    const { components } = this.state;
+    console.log(component)
+    const newComponentsList = _.concat([],components, component)
+    this.setState({
+      components: newComponentsList
+    })
+  }
+
   render() {
+    const { components } = this.state;
+    console.log('state components ', components)
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Source/>
+        <Target onDrop={this.onDrop} components={components}/>
       </div>
     );
   }
 }
 
-export default App;
+export default DragDropContext(HTML5Backend)(App);
